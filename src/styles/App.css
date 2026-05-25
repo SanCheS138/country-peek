@@ -1,47 +1,72 @@
-/* App.css */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #0077cc;
-  color: #fff;
+/* src/styles/App.css */
+
+/* .cards-grid — CSS Grid, auto-fill columns min 240px, gap and padding */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
 }
 
-/* .header__brand — larger bold text */
-.header__brand {
-  font-size: 1.5rem;
-  font-weight: bold;
+/* .card — block display, white bg, border-radius, box-shadow,
+           transition for hover, color inherit (it is a Link) */
+.card {
+  display: block;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* .header__nav — flex with gap between links, semi-bold */
-.header__nav {
-  display: flex;
-  gap: 1rem;
-  font-weight: 600;
+/* .card:hover — lift with translateY, stronger shadow */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* .search-bar — padding to offset it from the header */
-.search-bar {
-  padding: 1.5rem 2rem;
-}
-
-/* .search-bar__input — full width up to ~480px, padding, border, border-radius */
-.search-bar input {
+/* .card__flag — full width, fixed height ~160px, object-fit cover */
+.card__flag {
   width: 100%;
-  max-width: 480px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  height: 160px;
+  object-fit: cover;
 }
 
-/* .home — padding */
-.home {
-  padding: 2rem;
+/* .card__body — padding */
+.card__body {
+  padding: 1rem;
 }
 
-/* .home__placeholder — muted color, top margin */
-.home__placeholder {
-  margin-top: 1rem;
+/* .card__name — bold, slightly larger, dark color */
+.card__name {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #222;
+}
+
+/* .card__body p — small font, muted color, small margin */
+.card__body p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* .card__body p span — semi-bold label color */
+.card__body p span {
+  font-weight: 600;
+  color: #333;
+}
+
+/* .home__status — padding and muted color for loading/placeholder */
+.home__status {
+  padding: 1rem 0;
   color: #666;
+}
+
+/* .home__status--error — red color override */
+.home__status--error {
+  color: red;
 }
