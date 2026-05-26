@@ -1,74 +1,77 @@
-// Home.jsx
 import { useState, useEffect } from "react";
 import SearchBar from "../components/SearchBar";
+import FilterBar from "../components/FilterBar";
 import CountryCard from "../components/CountryCard";
+import "../styles/App.css";
 
 function Home() {
   const [query, setQuery] = useState("");
-  // 1. add state for: countries (array), loading (boolean), error (null)
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // ✅ New state for filters
+  const [region, setRegion] = useState("All");
+  const [sortBy, setSortBy] = useState("");
+
   useEffect(() => {
-    // 2. if query is empty — clear countries and error, return early
-    if (!query) {
-      setCountries([]);
-      setError(null);
-      return;
-    }
+    if (!query) return;
 
-    // 3. set up a debounce timer (400ms) with setTimeout
-    const timer = setTimeout(() => {
-      setLoading(true);
+    const controller = new AbortController();
+    setLoading(true);
+    setError(null);
 
-      fetch(`https://restcountries.com/v3.1/name/${query}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Not found");
-          return res.json();
-        })
-        .then((data) => {
-          setCountries(data);
-          setError(null);
-        })
-        .catch(() => {
-          setCountries([]);
-          setError("No countries found.");
-        })
-        .finally(() => setLoading(false));
-    }, 400);
+    fetch(`https://restcountries.com/v3.1/name/${query}`, {
+      signal: controller.signal,
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("No countries found");
+        return res.json();
+      })
+      .then((data) => {
+        setCountries(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          setError(err.message);
+          setLoading(false);
+        }
+      });
 
-    // 4. return a cleanup function that cancels the timer
-    return () => clearTimeout(timer);
+    return () => controller.abort();
   }, [query]);
 
-  return (
-    <div className="home">
-      <SearchBar query={query} onQueryChange={setQuery} />
+  // ✅ Derived displayed array
+  const displayed = countries
+    .filter((c) => region === "All" || c.region === region)
+    .sort((a, b) => {
+      if (sortBy === "name") return a.name.common.localeCompare(b.name.common);
+      if (sortBy === "population") return b.population - a.population;
+      return 0;
+    });
 
-      {/* 5. show a loading paragraph when loading is true */}
-      {loading && <p>Loading...</p>}
+return (
+  <div className="home">
+    <SearchBar query={query} onQueryChange={setQuery} />   {/* fixed here */}
+    <FilterBar
+      region={region}
+      onRegionChange={setRegion}
+      sortBy={sortBy}
+      onSortChange={setSortBy}
+    />
 
-      {/* 6. show an error paragraph when error is set */}
-      {error && <p className="error">{error}</p>}
+    {loading && <p className="page-status">Loading...</p>}
+    {error && <p className="page-status page-status--error">{error}</p>}
 
-      {/* 7. when not loading, no error, countries.length > 0:
-              render div.cards-grid, map countries to CountryCard */}
-      {!loading && !error && countries.length > 0 && (
-        <div className="cards-grid">
-          {countries.map((country) => (
-            <CountryCard key={country.cca3} country={country} />
-          ))}
-        </div>
-      )}
-
-      {/* 8. when not loading, no error, no countries, empty query:
-              show "Start searching to explore countries." */}
-      {!loading && !error && countries.length === 0 && !query && (
-        <p className="home__placeholder">Start searching to explore countries.</p>
-      )}
+    <div className="cards-grid">
+      {displayed.map((country) => (
+        <CountryCard key={country.cca3} country={country} />
+      ))}
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Home;
