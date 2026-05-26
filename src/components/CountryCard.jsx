@@ -9,7 +9,7 @@ function CountryCard({ country }) {
 
   function handleFavourite(e) {
     e.stopPropagation();
-    e.preventDefault(); // prevent Link navigation
+    e.preventDefault();
     if (isSaved) {
       dispatch({ type: "REMOVE_FAVOURITE", payload: cca3 });
     } else {
@@ -22,13 +22,15 @@ function CountryCard({ country }) {
       <img src={flags.svg} alt={`Flag of ${name.common}`} className="card__flag" />
       <div className="card__body">
         <h3>{name.common}</h3>
-        <p>
-          <strong>Population:</strong> {population.toLocaleString()}
-        </p>
-        <p>
-          <strong>Region:</strong> {region}
-        </p>
+        <p><strong>Population:</strong> {population.toLocaleString()}</p>
+        <p><strong>Region:</strong> {region}</p>
         <button
+          aria-label={
+            isSaved
+              ? `Remove ${name.common} from favourites`
+              : `Save ${name.common} to favourites`
+          }
+          aria-pressed={isSaved}
           onClick={handleFavourite}
           className={`fav-btn ${isSaved ? "fav-btn--saved" : ""}`}
         >

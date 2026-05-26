@@ -194,3 +194,45 @@
   color: crimson; /* highlight saved state */
   font-weight: bold;
 }
+/* Responsive Header */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  .header__nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* Responsive Cards Grid */
+@media (max-width: 500px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* Responsive Country Detail Layout */
+@media (max-width: 700px) {
+  .country-page__layout {
+    grid-template-columns: 1fr;
+  }
+  .country-page__details {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Long country names overflow fix */
+.card__body h3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.country-page__info h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
