@@ -10,8 +10,11 @@ function Header() {
       <nav className="header__nav">
         <Link to="/">Home</Link>
         <Link to="/favourites">Favourites</Link>
-        {/* ✅ Theme toggle button */}
-        <button onClick={toggleTheme} className="theme-toggle">
+        <button
+          aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+          onClick={toggleTheme}
+          className="theme-toggle"
+        >
           {theme === "light" ? "Dark Mode" : "Light Mode"}
         </button>
       </nav>
